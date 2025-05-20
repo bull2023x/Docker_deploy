@@ -1,0 +1,2 @@
+-- Placeholder for Sakila schema + data
+-- Replace this with combined content of sakila-schema.sql and sakila-data.sql
