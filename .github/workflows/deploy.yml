@@ -1,4 +1,4 @@
-name: Deploy to Windows PC via SSH
+name: Deploy on Windows Self-Hosted Runner
 
 on:
   push:
@@ -10,25 +10,18 @@ jobs:
     runs-on: [self-hosted, windows]
 
     steps:
-      - name: Checkout code
+      - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Copy files to target PC
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "."
-          target: "C:/Users/${{ secrets.SSH_USER }}/docker-deploy"
+      - name: Show Docker Compose version
+        shell: pwsh
+        run: docker-compose version
 
-      - name: Run deployment script on Windows PC
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd C:/Users/${{ secrets.SSH_USER }}/docker-deploy
-            docker-compose down
-            docker-compose up -d --build
+      - name: Stop existing containers
+        shell: pwsh
+        run: docker-compose down --remove-orphans
+
+      - name: Build & start containers
+        shell: pwsh
+        run: docker-compose up -d --build
+
