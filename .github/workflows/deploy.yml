@@ -14,15 +14,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Show Docker Compose version
-        shell: powershell
+        shell: cmd
         run: docker-compose version
 
       - name: Stop existing containers
-        shell: powershell
+        shell: cmd
         run: docker-compose down --remove-orphans
 
       - name: Build & start containers
-        shell: powershell
+        shell: cmd
         run: docker-compose up -d --build
-
 
